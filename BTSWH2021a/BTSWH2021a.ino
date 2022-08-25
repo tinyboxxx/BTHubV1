@@ -3,6 +3,7 @@
 #include <ESP32Encoder.h> // https://github.com/madhephaestus/ESP32Encoder
 #include <Bounce2.h>      // https://github.com/thomasfredericks/Bounce2
 #include <BleGamepad.h>   // https://github.com/lemmingDev/ESP32-BLE-Gamepad
+//https://github.com/h2zero/NimBLE-Arduino
 
 ESP32Encoder encoder1; // Create encoder objects
 ESP32Encoder encoder2;
@@ -16,6 +17,8 @@ int32_t encoder2Count = 0;
 
 Bounce debouncers[numOfButtons];
 BleGamepad bleGamepad("SteeringWheel Wireless Hub", "Tinyboxxx", 100); //Shows how you can customize the device name, manufacturer name and initial battery level
+BleGamepadConfiguration bleGamepadConfig;
+
 byte buttonPins[numOfButtons] = {33, 25, 14, 39, 32, 34, 35, 36, 2, 5, 17, 18, 21, 19, 22, 23}; //每个按钮所在的实际IO位置
 //4,16, encoder2
 //26,27, encoder1
@@ -42,8 +45,28 @@ void setup()
     debouncers[currentPinIndex].attach(buttonPins[currentPinIndex]); // After setting up the button, setup the Bounce instance
     debouncers[currentPinIndex].interval(5);
   }
-  bleGamepad.begin(20, 0, false, false, false, false, false, false, false, false, false, false, false, false, false); //后面的false是关闭默认开启的轴输入
-  bleGamepad.setAutoReport(false);
+
+
+  //  bleGamepadConfig.setAutoReport(false);
+  bleGamepadConfig.setControllerType(CONTROLLER_TYPE_GAMEPAD); // CONTROLLER_TYPE_JOYSTICK, CONTROLLER_TYPE_GAMEPAD (DEFAULT), CONTROLLER_TYPE_MULTI_AXIS
+  bleGamepadConfig.setButtonCount(20);
+  bleGamepadConfig.setHatSwitchCount(0);
+  bleGamepadConfig.setVid(0x7087);
+  bleGamepadConfig.setPid(0x000a);
+  bleGamepadConfig.setIncludeXAxis(false);
+  bleGamepadConfig.setIncludeYAxis(false);
+  bleGamepadConfig.setIncludeZAxis(false);
+  bleGamepadConfig.setIncludeRxAxis(false);
+  bleGamepadConfig.setIncludeRyAxis(false);
+  bleGamepadConfig.setIncludeRzAxis(false);
+  bleGamepadConfig.setIncludeSlider1(false);
+  bleGamepadConfig.setIncludeSlider2(false);
+  bleGamepadConfig.setIncludeRudder(false);
+  bleGamepadConfig.setIncludeThrottle(false);
+  bleGamepadConfig.setIncludeAccelerator(false);
+  bleGamepadConfig.setIncludeBrake(false);
+  bleGamepadConfig.setIncludeSteering(false);
+  bleGamepad.begin(&bleGamepadConfig);
 }
 
 void EncodersUpdate() //更新编码器
@@ -88,8 +111,8 @@ void EncodersUpdate() //更新编码器
 
 void loop()
 {
-
-  if (bleGamepad.isConnected())
+ // if (bleGamepad.isConnected())
+  if (true)
   {
     EncodersUpdate();
     bool sendReport = false;
