@@ -26,7 +26,7 @@ int battery_voltage_ADC = 0;                                                    
 float battery_voltage = 0;                                                                         // 存储电池电压的变量，以伏特为单位
 
 void setup() {
-  ESP32Encoder::useInternalWeakPullResistors = UP;  // 启用ESP32的弱上拉电阻
+  ESP32Encoder::useInternalWeakPullResistors = puType::up;  // 启用ESP32的弱上拉电阻
   encoder1.attachHalfQuad(26, 27);                  // 将编码器1连接到引脚26和27
   encoder2.attachHalfQuad(4, 16);                   // 将编码器2连接到引脚4和16
   encoder1.clearCount();                            // 清除编码器1的计数值
